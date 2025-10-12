@@ -102,29 +102,38 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import java.util.Base64;
+import java.util.Scanner;
 
 public class DESExample {
 
     public static void main(String[] args) {
         try {
-            // Key must be 8 bytes
-            String keyString = "mysecret";
-            String plaintext = "This is a secret message for DES.";
+            Scanner sc = new Scanner(System.in);
+
+            // User input key
+            System.out.print("Enter 8-character key: ");
+            String keyString = sc.nextLine();
+            if (keyString.length() != 8) {
+                System.out.println("Key must be exactly 8 characters long!");
+                return;
+            }
+
+            // User input plaintext
+            System.out.print("Enter plaintext: ");
+            String plaintext = sc.nextLine();
 
             // --- Encryption ---
             DESKeySpec desKeySpec = new DESKeySpec(keyString.getBytes());
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
 
-            // Create Cipher instance. "DES/ECB/PKCS5Padding" is the transformation string.
             Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
             byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes());
             String ciphertext = Base64.getEncoder().encodeToString(encryptedBytes);
 
-            System.out.println("Plaintext: " + plaintext);
-            System.out.println("Ciphertext (Base64): " + ciphertext);
+            System.out.println("\nCiphertext (Base64): " + ciphertext);
 
             // --- Decryption ---
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -138,6 +147,7 @@ public class DESExample {
         }
     }
 }
+
       `
     },
   },
